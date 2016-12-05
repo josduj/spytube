@@ -3,7 +3,7 @@ import codecs
 try:
 	import configparser
 except ImportError:
-	import ConfigPareser as configparser
+	import ConfigParser as configparser
 import logging
 
 log = logging.getLogger(__name__)
