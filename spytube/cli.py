@@ -131,7 +131,7 @@ class Spytube(object):
 
 	def get_song(self,song):
 		results = self.yt.search(song.artist + " - " + song.title, 
-			maxres=min(kwargs["results"] or 10,50) if self.kwargs["search_type"] else 1)
+			maxres=min(self.kwargs["results"] or 10,50) if self.kwargs["search_type"] else 1)
 		#set maxres if specified, 10 is default, 50 is max. if search type is 0 (first result), maxres = 1
 		if not results:
 			log.debug("no youtube results")
