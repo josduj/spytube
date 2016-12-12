@@ -15,12 +15,19 @@ Command-line tool for downloading Spotify playlists, albums or songs from YouTub
 
 `sudo pip install git+https://github.com/josduj/spytube`
 
-After successful instalation you need to register your Spotify app and update `spytube.ini` file located in `~/config/spytube/` with your Spotify app credentials. Also, optional but highly recommended is to add your YouTube api key.
+### Configuration
+Before usage you need to configure spytube. Config file is located in `~/.config/spytube/spytube.ini`.
+
+If you haven't already, you need to make [Spotify](https://developer.spotify.com/my-applications/) app and copy client ID and client secret to the config file (for redirect URI you can use the one from the config).
+
+You also need to copy your [Youtube](https://console.developers.google.com/) api key to config file.
 
 ### Usage
 `spytube [options] link`
 
-Replace the link with valid Spotify URL or URI.
+Link should be valid Spotify URL or URI.
+
+On first usage you will be asked to authorize your Spotify account. You should be automatically redirected to authorization page (if not, manually open the link printed in your terminal). Once you've allowed access to the app just copy the link you were redirected to back to the terminal and you should be good to go.
 
 By default songs are downloaded to `~/Music` folder, unless differently configured in `spytube.ini` or specified with `--path` argumet.
 
