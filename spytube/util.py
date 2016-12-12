@@ -43,9 +43,9 @@ def load_config():
 		log.warn("could not read config file: %s. using default options" % e)
 		pass
 	else:
-		for option_name, option_value in config["DEFAULT"].items():
+		for option_name, option_value in config.items('DEFAULT'):
 			if option_value is not None:
-			    options["DEFAULT"][option_name] = option_value
+			    options['DEFAULT'][option_name] = option_value
 	return options
 
 
@@ -53,7 +53,7 @@ def save_options(config_file, options):
 	config = configparser.ConfigParser()
 	
 	section = "DEFAULT"
-	for k, v in options[section].items():
+	for k, v in options.options(section).items():
 		config.set(section, k, str(v))
 
 	with codecs.open(config_file, "w", encoding="utf-8") as f:
