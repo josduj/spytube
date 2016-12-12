@@ -15,7 +15,7 @@ try:
 except ImportError:
     log.critical("unable to import mutagen. install it to add id3 tags") 
 
-VERSION = "0.1.4"
+VERSION = "0.1.5"
 
 
 class Spytube(object):
