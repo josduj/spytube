@@ -52,9 +52,8 @@ def load_config():
 def save_options(config_file, options):
 	config = configparser.ConfigParser()
 	
-	section = "DEFAULT"
-	for k, v in options.options(section).items():
-		config.set(section, k, str(v))
+	for k, v in options['DEFAULT'].items():
+		config.set('DEFAULT', k, str(v))
 
 	with codecs.open(config_file, "w", encoding="utf-8") as f:
 	    config.write(f)
