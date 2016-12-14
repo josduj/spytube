@@ -16,6 +16,7 @@ except ImportError:
     log.critical("unable to import mutagen. install it to add id3 tags") 
 
 VERSION = "0.1.5"
+INVALID_CHARS = '<>:"/\|?*'
 
 
 class Spytube(object):
@@ -96,7 +97,10 @@ class Spytube(object):
 		for i,song in enumerate(self.sp_tracklist.tracklist):
 			log.info("%i/%i %s - %s (%i sec)" % 
 				(i+1,self.sp_tracklist.size, song.artist, song.title, song.duration))
-			filename = (song.artist + " - " + song.title).replace("/","_")
+			
+			filename = song.artist + " - " + song.title
+			for c in INVALID_CHARS:
+				filename = filename.replace(c,'_')
 
 			if os.path.exists(filename + ".mp3"):
 				self.song_info(i+1, song)
