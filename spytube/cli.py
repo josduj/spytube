@@ -237,7 +237,7 @@ def main(args=None):
 		else:	
 			args = parse_args(sys.argv[1])
 	if args.verbose:
-		log.setLevel(20/args.verbose)
+		log.setLevel(int(20/args.verbose))
 	log.debug(args)
 	util.init()
 	spyt = Spytube(**vars(args))
