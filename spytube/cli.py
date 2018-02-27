@@ -118,6 +118,7 @@ class Spytube(object):
 					        'preferredquality': '192',
 					    	},],
 					    'logger': log,
+						'ignoreerrors': True,
 					    'progress_hooks': [self.ydl_hook],
 					}
 
@@ -159,37 +160,41 @@ class Spytube(object):
 
 
 	def add_metadata(self, filename, song):
-		"""	
+		"""
 		http://id3.org/id3v2.4.0-frames
 		"""
 		log.info('adding metadata')
-		mp3file = MP3(filename + ".mp3", ID3=ID3)
+		log.info(self.folder_path)
+		if os.path.isfile(self.folder_path + "/" + filename + ".mp3"):
+			mp3file = MP3(filename + ".mp3", ID3=ID3)
 
-		if self.kwargs["metadata"]:
-			opts = [int(o) for o in bin(self.kwargs["metadata"])[2:]]
-		else:
-			opts = [1,1,1] if self.sp_tracklist.type == "album" else [1,1,0]
-
-		if opts[0]: #default
-			mp3file['TIT2'] = TIT2(encoding=3, text=song.title)
-			mp3file['TPE1'] = TPE1(encoding=3, text=song.artist)
-
-		if opts[1]:	#default
-			mp3file['TALB'] = TALB(encoding=3, text=song.album)
-			cover = requests.get(song.cover[1]).content
-			if cover:
-				mp3file['APIC'] = APIC(encoding=3, mime='image/jpeg', type=3, desc=u'Cover', data=cover)
+			if self.kwargs["metadata"]:
+				opts = [int(o) for o in bin(self.kwargs["metadata"])[2:]]
 			else:
-				log.warning("Error while getting cover")
+				opts = [1,1,1] if self.sp_tracklist.type == "album" else [1,1,0]
 
-		if opts[2]:	#default for album download
-			mp3file['TPE2'] = TPE2(encoding=3, text=song.album_artist)
-			mp3file['TPOS'] = TPOS(encoding=3, text=str(song.disc_num))
-			mp3file['TRCK'] = TRCK(encoding=3, text=str(song.track_num))
-			#mp3file['TIT3'] = TIT3(encoding=3, text="Subtitle")
-			#mp3file['COMM'] = COMM(encoding=3, text="Comment")		#add comment with youtube and spotify url?
+			if opts[0]: #default
+				mp3file['TIT2'] = TIT2(encoding=3, text=song.title)
+				mp3file['TPE1'] = TPE1(encoding=3, text=song.artist)
 
-		mp3file.save()
+			if opts[1]:	#default
+				mp3file['TALB'] = TALB(encoding=3, text=song.album)
+				cover = requests.get(song.cover[1]).content
+				if cover:
+					mp3file['APIC'] = APIC(encoding=3, mime='image/jpeg', type=3, desc=u'Cover', data=cover)
+				else:
+					log.warning("Error while getting cover")
+
+			if opts[2]:	#default for album download
+				mp3file['TPE2'] = TPE2(encoding=3, text=song.album_artist)
+				mp3file['TPOS'] = TPOS(encoding=3, text=str(song.disc_num))
+				mp3file['TRCK'] = TRCK(encoding=3, text=str(song.track_num))
+				#mp3file['TIT3'] = TIT3(encoding=3, text="Subtitle")
+				#mp3file['COMM'] = COMM(encoding=3, text="Comment")		#add comment with youtube and spotify url?
+
+			mp3file.save()
+		else:
+			log.info("skipped song")
 
 	def song_info(self, i, song, status = None):
 		if not self.kwargs["verbose"]:
@@ -237,7 +242,7 @@ def main(args=None):
 		else:	
 			args = parse_args(sys.argv[1])
 	if args.verbose:
-		log.setLevel(20/args.verbose)
+		log.setLevel(int(20/args.verbose))
 	log.debug(args)
 	util.init()
 	spyt = Spytube(**vars(args))
